@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html>
+
+  <head>
+    <script src="https://unpkg.com/wrld.js@1.x.x"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet.css" rel="stylesheet" />
+
+    <link href="https://cdn-webgl.wrld3d.com/wrldjs/addons/resources/v1/latest/css/wrld.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+    <script src="https://cdn-webgl.wrld3d.com/wrldjs/addons/marker_controller/v1/latest/marker_controller.js"></script>
+    <script src="https://cdn-webgl.wrld3d.com/wrldjs/addons/searchbar/v1/latest/searchbar.js"></script>
+    <script src="https://cdn-webgl.wrld3d.com/wrldjs/addons/indoor_control/v1/latest/indoor_control.js"></script>
+  </head>
+
+  <body>
+    <div style="position: relative">
+      <div id="widget-container" class="wrld-widget-container"></div>
+      <div id="map" style="height: 800px"></div>
+      <script>
+        var map = Wrld.map("map", "989f0bdd9b823264ecedfc37d4ef6476", {
+          center: [49.577002, 11.001784],
+          zoom: 16
+          //headingDegrees: 310
+        });
+
+        var polygonPoints = [
+          [49.579062, 10.999596],
+          [49.577559, 11.004177],
+          [49.576133, 11.003361],
+          [49.577455, 10.999102]
+        ];
+
+        //var poly = Wrld.polygon(polygonPoints).addTo(map);
+        var poly = Wrld.native.polygon(polygonPoints,{color: [0,0,255,100] }).addTo(map);
+
+        var locations = [{
+            title: "LOC-DE-ERL",
+            subtitle: "49.577002, 11.001784",
+            location: {
+              latLng: Wrld.latLng(49.577002, 11.001784),
+              zoom: 15,
+              headingDegrees: 60
+            }
+          },
+          {
+            title: "LOC-US-Bay",
+            subtitle: "37.799121, -122.377214",
+            location: {
+              latLng: Wrld.latLng(37.799121, -122.377214),
+              zoom: 15,
+              headingDegrees: -30
+            }
+          },
+          {
+            title: "LOC-US-Pier",
+            location: {
+              latLng: Wrld.latLng(37.809698, -122.410383),
+              zoom: 17,
+              headingDegrees: 235
+            }
+          },
+          {
+            title: "LOC-Alcatraz",
+            location: {
+              latLng: Wrld.latLng(37.826771, -122.422921),
+              zoom: 16,
+              headingDegrees: 260
+            }
+          }
+        ];
+
+        var calculateDistSqr = function(latLng1, latLng2) {
+          return Math.pow(latLng1.lat - latLng2.lat, 2) + Math.pow(latLng1.lng - latLng2.lng, 2);
+        };
+
+        var locationSearchService = {
+          fetchNearbyLocationsByTerm: function(latLng, term, callback) {
+            term = term.trim().toLowerCase();
+            var results = [];
+            if (term.length > 0) {
+              locations.forEach(function(location) {
+                var termPos = location.title.toLowerCase().indexOf(term);
+                if (termPos !== -1) {
+                  results.push(Object.assign({}, location, {
+                    distSqr: calculateDistSqr(latLng, location.location.latLng)
+                  }));
+                }
+              });
+            }
+            results.sort(function(lhs, rhs) {
+              return lhs.distSqr - rhs.distSqr;
+            });
+            callback(results);
+          },
+
+          fetchAutocompleteOptions: function(latLng, term, callback) {
+            term = term.trim().toLowerCase();
+            var options = [];
+            if (term.length > 0) {
+              locations.forEach(function(location) {
+                var termPos = location.title.toLowerCase().indexOf(term);
+                if (termPos !== -1) {
+                  options.push(Object.assign({}, location, {
+                    pos: termPos
+                  }));
+                }
+              });
+            }
+            options.sort(function(lhs, rhs) {
+              return lhs.pos - rhs.pos;
+            });
+            callback(options);
+          }
+        };
+
+        var searchbarConfig = {
+          locationSearchService: locationSearchService
+        };
+
+        var searchbar = new WrldSearchbar("widget-container", map, searchbarConfig);
+        
+        // indoor
+        // var indoorControl = new WrldIndoorControl("widget-container", map);
+
+        // marker
+
+        var markerController = new WrldMarkerController(map, {
+          poiViewsEnabled: true
+        });
+
+
+        var markerId = 0;
+        var markerOptions = {
+          poiView: {
+            title: "LOC-DE-ERL",
+            address: "an address goes here.",
+            tags: ["Offices", "Factory"],
+            customView: "custom_view.html",
+            customViewHeight: 400
+          },
+          iconKey: "offices"
+        };
+
+        var marker = markerController.addMarker(markerId, [49.578437, 11.000398], markerOptions);
+
+      </script>
+
+    </div>
+  </body>
+
+</html>
