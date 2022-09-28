@@ -16,11 +16,13 @@
   <body>
     <div style="position: relative">
       <div id="widget-container" class="wrld-widget-container"></div>
+      <div id="widget-container-indoor" class="wrld-widget-container"></div>
       <div id="map" style="height: 800px"></div>
       <script>
         var map = Wrld.map("map", "989f0bdd9b823264ecedfc37d4ef6476", {
           center: [49.577002, 11.001784],
-          zoom: 16
+          zoom: 16,
+          indoorsEnabled: true
           //headingDegrees: 310
         });
 
@@ -32,7 +34,7 @@
         ];
 
         //var poly = Wrld.polygon(polygonPoints).addTo(map);
-        var poly = Wrld.native.polygon(polygonPoints,{color: [0,0,255,100] }).addTo(map);
+        var poly = Wrld.native.polygon(polygonPoints,{color: [0,0,255,80] }).addTo(map);
 
         var locations = [{
             title: "LOC-DE-ERL",
@@ -47,8 +49,8 @@
             title: "LOC-US-Bay",
             subtitle: "37.799121, -122.377214",
             location: {
-              latLng: Wrld.latLng(37.799121, -122.377214),
-              zoom: 15,
+              latLng: Wrld.latLng(37.78, -122.0),
+              zoom: 17,
               headingDegrees: -30
             }
           },
@@ -121,7 +123,7 @@
         var searchbar = new WrldSearchbar("widget-container", map, searchbarConfig);
         
         // indoor
-        // var indoorControl = new WrldIndoorControl("widget-container", map);
+        var indoorControl = new WrldIndoorControl("widget-container-indoor", map);
 
         // marker
 
