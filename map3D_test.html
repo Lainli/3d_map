@@ -20,17 +20,19 @@
       <div id="map" style="height: 800px"></div>
       <script>
         var map = Wrld.map("map", "989f0bdd9b823264ecedfc37d4ef6476", {
-          center: [49.577002, 11.001784],
-          zoom: 16,
+          center: [56.459801, -2.977928],
+          zoom: 17,
           indoorsEnabled: true
           //headingDegrees: 310
         });
+        
 
         var polygonPoints = [
-          [49.579062, 10.999596],
-          [49.577559, 11.004177],
-          [49.576133, 11.003361],
-          [49.577455, 10.999102]
+          [56.460918, -2.981490],
+          [56.461137, -2.978348],
+          [56.459867, -2.977743],
+          [56.459772, -2.979306],
+          [56.460188, -2.981540]
         ];
 
         //var poly = Wrld.polygon(polygonPoints).addTo(map);
@@ -50,7 +52,7 @@
             subtitle: "56.459801, -2.977928",
             location: {
               latLng: Wrld.latLng(56.459801, -2.977928),
-              zoom: 17,
+              zoom: 15,
               headingDegrees: -30
             }
           },
@@ -120,7 +122,7 @@
           locationSearchService: locationSearchService
         };
 
-        var searchbar = new WrldSearchbar("widget-container", map, searchbarConfig);
+        //var searchbar = new WrldSearchbar("widget-container", map, searchbarConfig);
         
         // indoor
         var indoorControl = new WrldIndoorControl("widget-container-indoor", map);
@@ -130,21 +132,31 @@
         var markerController = new WrldMarkerController(map, {
           poiViewsEnabled: true
         });
+        
 
-
-        var markerId = 0;
+        var markerIds = [0, 1, 2];
         var markerOptions = {
           poiView: {
-            title: "LOC-DE-ERL",
-            address: "an address goes here.",
-            tags: ["Offices", "Factory"],
-            customView: "https://lainli.github.io/hello.html",
-            customViewHeight: 400
+            title: "Unit 3 (GB-DUN01-MO-03)",
+            address: "3 Market Mews, Market Street, Dundee DD1 3LA, United Kingdom",
+            tags: ["Offices"],
+            subtitle: "A subtitle goes here.",
+            phone: "1234567",
+            web: "www.GB-DUN01-MO-03.com",
+            //email: "GB-DUN01-MO-03@siemens.com",
+            //facebook: "siemens",
+            //twitter: "siemens",
+            imageUrl: "https://lainli.github.io/uk_building_chart.png",
+            description: "fztf"
+            //customView: "https://lainli.github.io/hello.html",
+            //customViewHeight: 400
           },
           iconKey: "offices"
         };
 
-        var marker = markerController.addMarker(markerId, [49.578437, 11.000398], markerOptions);
+        var marker0 = markerController.addMarker(markerIds[0], [56.460052, -2.978329], markerOptions);
+        var marker1 = markerController.addMarker(markerIds[1], [56.4607, -2.9784], { iconKey: "offices" });
+      	var marker2 = markerController.addMarker(markerIds[2], [56.4605, -2.979663], { iconKey: "technology" });
 
       </script>
 
