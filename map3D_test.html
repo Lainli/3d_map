@@ -157,6 +157,33 @@
         var marker0 = markerController.addMarker(markerIds[0], [56.460052, -2.978329], markerOptions);
         var marker1 = markerController.addMarker(markerIds[1], [56.4607, -2.9784], { iconKey: "offices" });
       	var marker2 = markerController.addMarker(markerIds[2], [56.4605, -2.979663], { iconKey: "technology" });
+        
+        
+        // indoor popups
+        function onIndoorMapEntered(event) {        
+          var latLng = map.getCenter();        
+          var indoorMapId = event.indoorMap.getIndoorMapId();
+          var buildingName = event.indoorMap.getIndoorMapName();
+
+          var popupOptions = { 
+            indoorMapId: indoorMapId, 
+            indoorMapFloorIndex: 0, 
+            autoClose: false, 
+            closeOnClick: true 
+          };
+
+          var popup = Wrld.popup(popupOptions)
+            .setLatLng(latLng)
+            .addTo(map)
+            .setContent("100 kwh");
+
+          //map.on("popupclose", function(){ map.indoors.exit(); });
+        }
+
+      	map.indoors.on("indoormapenter", onIndoorMapEntered);
+
+
+
 
       </script>
 
