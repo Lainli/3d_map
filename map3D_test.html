@@ -21,11 +21,18 @@
       <script>
         var map = Wrld.map("map", "989f0bdd9b823264ecedfc37d4ef6476", {
           center: [56.459801, -2.977928],
-          zoom: 17,
+          zoom:1,
           indoorsEnabled: true
           //headingDegrees: 310
         });
         
+        setTimeout(function() {
+          map.setView([56.459801, -2.977928], 17, {
+            headingDegrees: 270,
+            animate: true,
+            durationSeconds:5
+          });
+        }, 5000);
 
         var polygonPoints = [
           [56.460918, -2.981490],
