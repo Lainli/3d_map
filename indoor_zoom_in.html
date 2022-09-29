@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="https://unpkg.com/wrld.js@1.x.x"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.1/leaflet.css" rel="stylesheet" />
+  </head>
+  
+  <body>
+  <div style="position: relative">
+    <div id="map" style="height: 400px"></div>
+    <script>
+      var map = Wrld.map("map", "989f0bdd9b823264ecedfc37d4ef6476", {
+        center: [56.459801, -2.977928],
+        zoom: 18,
+        indoorsEnabled: true
+      });
+
+      function onInitialStreamingComplete() {
+        var mapName = "westport_house";
+        map.indoors.enter(mapName);
+        Wrld.indoorMapEntities.indoorMapEntityInformation(mapName).addTo(map);
+      }
+
+      function onIndoorMapEntered() {
+        map.indoors.setFloor(2);
+        map.setView([56.459984, -2.978238], 19);
+      }
+
+      function onIndoorMapEntityInformationChanged(event) {
+        var indoorMapEntityInformation = event.indoorMapEntityInformation;
+        var loadState = indoorMapEntityInformation.getLoadState();
+        var entities = indoorMapEntityInformation.getIndoorMapEntities();
+
+        if (loadState !== "Complete") return;
+
+        entities.forEach(function(entity) {
+          addPolygon(entity, map, indoorMapEntityInformation);
+        });
+      }
+
+      function addPolygon(entity, map, indoorMapEntityInformation) {
+        const polygon = entity.getOutline();
+        if (polygon.length === 0) return;
+        const indoorMapId = indoorMapEntityInformation.getIndoorMapId();
+        const indoorMapFloorId =  entity.getIndoorMapFloorId();
+        const polygonOptions = { indoorMapId, indoorMapFloorId, interactive: false };
+
+        Wrld.polygon(polygon, polygonOptions).addTo(map);
+      }
+
+      map.on("initialstreamingcomplete", onInitialStreamingComplete);
+      map.indoors.on("indoormapenter", onIndoorMapEntered);
+      map.indoorMapEntities.on("indoormapentityinformationchanged",onIndoorMapEntityInformationChanged);
+    </script>
+
+  </div>
+  </bod
